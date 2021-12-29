@@ -36,6 +36,7 @@ app.UseExceptionHandler(c => c.Run(async context =>
     await context.Response.WriteAsJsonAsync(response);
 }));
 
+PersonsApi.PersonModel personModel = new PersonsApi.PersonModel();
 //app.UseHttpsRedirection();
 
 async Task<List<DTO.PersonSmall>> GetPeople(int page = 0, string sex = "Any", int minAge = int.MinValue, int maxAge = int.MaxValue)
@@ -43,7 +44,7 @@ async Task<List<DTO.PersonSmall>> GetPeople(int page = 0, string sex = "Any", in
     DTO.Sex sexValue;
     if (!Enum.TryParse<DTO.Sex>(sex, true, out sexValue))
         return new List<DTO.PersonSmall>();
-    var people = await new PersonsApi.PersonModel().GetPeople(
+    var people = await personModel.GetPeople(
         page: page,
         sex: sexValue,
         minAge: minAge,
@@ -53,7 +54,7 @@ async Task<List<DTO.PersonSmall>> GetPeople(int page = 0, string sex = "Any", in
 
 async Task<DTO.Person> GetPerson(string id)
 {
-    var person = await new PersonsApi.PersonModel().GetPerson(id);
+    var person = await personModel.GetPerson(id);
     return person;
 }
 
