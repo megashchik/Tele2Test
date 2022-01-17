@@ -5,14 +5,19 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using DTO;
+using Microsoft.Extensions.Configuration;
 using PersonRepository;
 
 namespace PersonsApi
 {
     internal class WebInitializer
     {
+        readonly string taskUri;
 
-        readonly string taskUri = "http://testlodtask20172.azurewebsites.net/task";
+        public WebInitializer()
+        {
+            this.taskUri = GetTaskUri();
+        }
 
         public async Task<List<Person>> GetAllPeople()
         {
@@ -32,6 +37,15 @@ namespace PersonsApi
                 return person with { Id = id };
             else
                 throw new NullReferenceException("The value was null, possibly an invalid id was specified");
+        }
+
+        string GetTaskUri()
+        {
+            var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
+            return configuration.GetSection("TaskApi").Value;
         }
     }
 }
