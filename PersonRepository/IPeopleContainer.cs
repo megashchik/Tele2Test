@@ -2,7 +2,7 @@
 
 namespace PersonRepository
 {
-    public interface IPersonContainer
+    public interface IPeopleContainer
     {
         public Task AddPeople(IEnumerable<Person> people);
         public Task<Person> GetPersonById(string id);

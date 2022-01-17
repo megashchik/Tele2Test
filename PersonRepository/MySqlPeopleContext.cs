@@ -4,11 +4,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace PersonRepository
 {
-    internal class MySqlPersonContext : DbContext
+    internal class MySqlPeopleContext : DbContext
     {
         public DbSet<Person> People { get; private set; }
 
-        public MySqlPersonContext()
+        public MySqlPeopleContext()
         {
             Database.EnsureCreated();
         }

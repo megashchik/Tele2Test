@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PersonRepository
 {
-    public class MySqlPersonContainer : IPersonContainer
+    public class MySqlPeopleContainer : IPeopleContainer
     {
         public async Task AddPeople(IEnumerable<Person> people)
         {
-            using MySqlPersonContext context = new MySqlPersonContext();
+            using MySqlPeopleContext context = new MySqlPeopleContext();
             
             foreach (var p in people)
             {
@@ -21,7 +21,7 @@ namespace PersonRepository
 
         public async Task<Person> GetPersonById(string id)
         {
-            using MySqlPersonContext context = new MySqlPersonContext();
+            using MySqlPeopleContext context = new MySqlPeopleContext();
             var person = await context.People.FirstOrDefaultAsync(p => p.Id == id);
             if(person is object)
             {
@@ -35,7 +35,7 @@ namespace PersonRepository
 
         public async Task<List<Person>> GetPeople(int count = 50, int skip = 0, Sex sex = Sex.Any, int minAge = int.MinValue, int maxAge = int.MaxValue)
         {
-            using MySqlPersonContext context = new MySqlPersonContext();
+            using MySqlPeopleContext context = new MySqlPeopleContext();
             IQueryable<Person> query = context.People.AsQueryable();
             if (sex != Sex.Any)
                 query = query.Where(p => p.Sex == sex);

@@ -8,7 +8,7 @@ namespace PersonApiTest
 {
     public class ApiTest
     {
-        PersonModel api = new PersonModel();
+        PeopleModel api = new PeopleModel();
         [SetUp]
         public void Setup()
         {

@@ -25,7 +25,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//app.MapFallback(() => Results.Redirect("/swagger"));
 
 app.UseExceptionHandler(c => c.Run(async context =>
 {
@@ -36,8 +35,7 @@ app.UseExceptionHandler(c => c.Run(async context =>
     await context.Response.WriteAsJsonAsync(response);
 }));
 
-PersonsApi.PersonModel personModel = new PersonsApi.PersonModel();
-//app.UseHttpsRedirection();
+PersonsApi.PeopleModel personModel = new PersonsApi.PeopleModel();
 
 async Task<List<DTO.PersonSmall>> GetPeople(int page = 0, string sex = "Any", int minAge = int.MinValue, int maxAge = int.MaxValue)
 {
