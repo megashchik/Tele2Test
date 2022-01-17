@@ -13,7 +13,6 @@ namespace PersonsApi
     {
 
         readonly string taskUri = "http://testlodtask20172.azurewebsites.net/task";
-        readonly string taskIdUri = "http://testlodtask20172.azurewebsites.net/task/";
 
         public async Task<List<Person>> GetAllPeople()
         {
@@ -26,7 +25,7 @@ namespace PersonsApi
         public async Task<Person> GetPersonById(string id)
         {
             using HttpClient client = new HttpClient();
-            var response = await client.GetAsync(taskIdUri + id);
+            var response = await client.GetAsync($"{taskUri}/{id}");
             string jsonPerson = await response.Content.ReadAsStringAsync();
             Person? person = JsonSerializer.Deserialize<Person>(jsonPerson);
             if (person is object)
