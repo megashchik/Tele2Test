@@ -58,7 +58,7 @@ async Task<DTO.Person> GetPerson(string id)
 
 app.MapGet("/people", GetPeople).WithName("GetPeople");
 
-app.MapGet("/person", GetPerson).WithName("GetPersonById");
+app.MapGet("/person/{id}", GetPerson).WithName("GetPersonById");
 
 
 app.Run();
