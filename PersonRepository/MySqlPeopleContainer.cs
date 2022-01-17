@@ -8,14 +8,23 @@ namespace PersonRepository
         public async Task AddPeople(IEnumerable<Person> people)
         {
             using MySqlPeopleContext context = new MySqlPeopleContext();
-            
-            foreach (var p in people)
+            //var toUpdateId = context.People.Select(p => p.Id).Intersect(people.Select(x => x.Id).ToArray());
+            var toUpdateId = context.People.Where(p => people.Select(n => n.Id).Contains(p.Id));
+            //var toAddId = people.Select(p => p.Id).Except(toUpdateId);
+            var toAddId = people.Where(p => !toUpdateId.Select(n => n.Id).Contains(p.Id));
+
+            context.People.UpdateRange(toUpdateId);
+            context.People.AddRange(toAddId);
+
+            //context.People.UpdateRange(people.Where(p => toUpdateId.Contains(p.Id)));
+            //context.People.AddRange(people.Where(p => toAddId.Contains(p.Id)));
+            /*foreach (var p in people)
             {
                 if (context.People.Any(n => n.Id == p.Id))
                     context.People.Update(p);
                 else
                     context.People.Add(p);
-            }
+            }*/
             await context.SaveChangesAsync();
         }
 
