@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-
+using WebServiceTele2.DTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +36,7 @@ app.UseExceptionHandler(c => c.Run(async context =>
 
 PersonsApi.PeopleModel personModel = new PersonsApi.PeopleModel();
 
-async Task<IResult> GetPeople(int page = 0, string sex = "Any", int minAge = int.MinValue, int maxAge = int.MaxValue)
+async Task<IResult> GetPeople(int page = 0, string sex = "Any", Age? age = default)
 {
     DTO.Sex sexValue;
     if (!Enum.TryParse<DTO.Sex>(sex, true, out sexValue))
@@ -45,8 +44,8 @@ async Task<IResult> GetPeople(int page = 0, string sex = "Any", int minAge = int
     var people = await personModel.GetPeople(
         page: page,
         sex: sexValue,
-        minAge: minAge,
-        maxAge: maxAge);
+        minAge: age.MinAge,
+        maxAge: age.MaxAge);
     var peopleWithoutAge = people.Select(n => (DTO.PersonSmall)n).ToList();
     if(peopleWithoutAge.Count > 0)
         return Results.Ok(peopleWithoutAge);
