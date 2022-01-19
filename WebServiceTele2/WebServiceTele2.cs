@@ -37,23 +37,34 @@ app.UseExceptionHandler(c => c.Run(async context =>
 
 PersonsApi.PeopleModel personModel = new PersonsApi.PeopleModel();
 
-async Task<List<DTO.PersonSmall>> GetPeople(int page = 0, string sex = "Any", int minAge = int.MinValue, int maxAge = int.MaxValue)
+async Task<IResult> GetPeople(int page = 0, string sex = "Any", int minAge = int.MinValue, int maxAge = int.MaxValue)
 {
     DTO.Sex sexValue;
     if (!Enum.TryParse<DTO.Sex>(sex, true, out sexValue))
-        return new List<DTO.PersonSmall>();
+        return Results.NotFound();
     var people = await personModel.GetPeople(
         page: page,
         sex: sexValue,
         minAge: minAge,
         maxAge: maxAge);
-    return people.Select(n => (DTO.PersonSmall)n).ToList();
+    var peopleWithoutAge = people.Select(n => (DTO.PersonSmall)n).ToList();
+    if(peopleWithoutAge.Count > 0)
+        return Results.Ok(peopleWithoutAge);
+    else
+        return Results.NotFound();
 }
 
-async Task<DTO.Person> GetPerson(string id)
+async Task<IResult> GetPerson(string id)
 {
-    var person = await personModel.GetPerson(id);
-    return person;
+    try
+    {
+        var person = await personModel.GetPerson(id);
+        return Results.Ok(person);
+    }
+    catch (InvalidDataException e)
+    {
+        return Results.NotFound();
+    }
 }
 
 app.MapGet("/people", GetPeople).WithName("GetPeople");

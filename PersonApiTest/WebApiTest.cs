@@ -34,7 +34,7 @@ namespace PersonApiTest
             var client = GetClient();
 
             var errorResponce = await client.GetAsync($"{personPath}?id=non-existingId");
-            Assert.AreEqual(500, (int)errorResponce.StatusCode);
+            Assert.AreEqual(404, (int)errorResponce.StatusCode);
             System.Console.WriteLine(await errorResponce.Content.ReadAsStringAsync());
         }
 
@@ -95,8 +95,9 @@ namespace PersonApiTest
             var client = GetClient();
             string defunctPagePath = $"{peoplePath}?page=100";
 
-            var defunctPage = await client.GetFromJsonAsync<List<DTO.PersonSmall>>(defunctPagePath);
-            Assert.True(defunctPage!.Count == 0);
+            var invalidResult = await client.GetAsync(defunctPagePath);
+            // this page non-exist
+            Assert.AreEqual(404, (int)invalidResult.StatusCode);
         }
 
         [Test]
@@ -116,9 +117,9 @@ namespace PersonApiTest
             var client = GetClient();
             string path = $"{peoplePath}?sex=females";
 
-            var women = await client.GetFromJsonAsync<List<DTO.PersonSmall>>(path);
-            // invalid gender is defined as missing
-            Assert.True(women!.Count == 0);
+            var invalidResult = await client.GetAsync(path);
+            // this page non-exist
+            Assert.AreEqual(404, (int)invalidResult.StatusCode);
         }
 
         [Test]
